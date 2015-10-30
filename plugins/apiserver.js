@@ -141,10 +141,18 @@
         switch (path) {
           case '/stdin':
             return this.on_stdin(req, res, params);
+          case '/listbuddy':
+            return this.on_listbuddy(req, res, params);
+          case '/listgroup':
+            return this.on_listgroup(req, res, params);
+          case '/listdiscuss':
+            return this.on_listdiscuss(req, res, params);
           case '/send':
             return this.on_sendmsg(req, res, params);
           case '/reload':
             return this.on_reload_plugin(req, res, params);
+          case '/quit':
+            return this.on_quit(req, res, params);
           default:
             return res.endjson({
               err: 404,
@@ -169,9 +177,48 @@
       });
     };
 
+    APIServer.prototype.on_quit = function(req, res, params) {
+      if( req.headers.host.indexOf('localhost') >= 0 ) {
+          res.endjson({
+            err: 0,
+            msg: "ok, qqbot shutdown now."
+          });
+
+          console.log("qqbot gracefully shutdown now.\n");
+          process.exit(0);
+
+      } else {
+          res.endjson({
+            err: 403,
+            msg: "only accept quit command from localhost."
+          });
+      }
+    };
+
+    APIServer.prototype.on_listbuddy = function(req, res, params) {
+        var bot = this.qqbot;
+        return bot.update_buddy_list(function(ret, e){
+            return res.endjson( bot.buddy_info );
+        });
+    };
+
+    APIServer.prototype.on_listgroup = function(req, res, params) {
+        var bot = this.qqbot;
+        return bot.update_group_list(function(ret, e){
+            return res.endjson( bot.group_info );
+        });
+    };
+
+    APIServer.prototype.on_listdiscuss = function(req, res, params) {
+        var bot = this.qqbot;
+        return bot.update_dgroup_list(function(ret, e){
+            return res.endjson( bot.dgroup_info );
+        });
+    };
+
     APIServer.prototype.on_sendmsg = function(req, res, params) {
       var discuss_group, group, msg, user;
-      log.info("will send " + params.type + " " + params.to + " : " + params.msg);
+      log.info("sending " + params.type + " " + params.to + " : " + params.msg);
       if (params.type === 'buddy') {
         user = params.to;
         return this.qqbot.send_message(user, params.msg, function(ret, e) {

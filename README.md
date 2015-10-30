@@ -12,6 +12,7 @@ Features
 * 支持好友，群，讨论组的接入
 * 插件化，目前支持消息的派发
 * 提供HTTP API支持（比如群通知什么的都能做哦）
+* 除了 qqbot，还附带了一个命令行的 qq 来连接 qqbot，可以用来显示好友、群组列表，发送消息等操作
 
 你可以用TA来  
 
@@ -36,8 +37,19 @@ $ qqbot
 * 执行 `qqbot` 启动 SmartQQ-Bot，会从QQ服务器请求二维码图片并打开显示，
 * 用手机QQ扫描二维码，并选择允许 smartQQ 登录
 * 登陆成功后，可以用 Ctrl+Z, bg 1 使之进入后台模式
+
 * 可以用其他的程序访问 apiserver，调用 SmartQQ-Bot 的消息转发功能，协议为：
 `http://localhost:3000/send?type=[group|buddy|discuss]&to=[gid|uin]&msg=[msg]`
+
+* 附带的命令行的 qq，可以访问启动后 qqbot，可以用来显示好友、群组列表，发送消息等操作
+
+```bash
+$ qq list buddy
+$ qq list group
+$ qq send buddy {uin} {msg}
+$ qq send group {gid} {msg}
+$ qq quit
+```
 
 参考资料
 ----

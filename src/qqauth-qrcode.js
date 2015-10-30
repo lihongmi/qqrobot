@@ -235,7 +235,7 @@
                 log.info("登录 step1 等待二维码校验结果");
                 return auth.check_qq_verify(qq, function(ret) {
                     if( int(ret[0]) == 0 && ret[2].match(/^http/)) {
-                        console.log( ret[5] + ret[4] );
+                        console.log( ret[5] + ", " + ret[4] );
                         
                         log.info("登录 step2 cookie获取");
                         return auth.check_sig(ret[2], function(ret){
@@ -251,7 +251,6 @@
                                   uin: ret.result.uin,
                                   vfwebqq: ret.result.vfwebqq
                                 };
-                                console.log( auth_options );
                                 return callback(all_cookies, auth_options);
                               } else {
                                 log.info("登录失败");

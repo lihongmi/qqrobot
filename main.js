@@ -4,7 +4,7 @@
 
 (function() {
   var log = new (require('log'))('debug');
-  var auth = require("./src/qqauth_qrcode");
+  var auth = require("./src/qqauth-qrcode");
   var api = require("./src/qqapi");
   var QQBot = require("./src/qqbot");
   var defaults = require('./src/defaults');
@@ -37,7 +37,7 @@
   };
 
   var run = function() {
-    "start qqbot...";
+    "starting qqbot ...";
     var isneedlogin, params;
     params = process.argv.slice(-1)[0] || '';
     isneedlogin = params.trim() !== 'nologin';
@@ -51,22 +51,11 @@
       });
       return bot.update_all_members(function(ret) {
         var k, ref, ref1, v;
-        if (!ret) {
+        if (! ret) {
           log.error("获取信息失败");
           process.exit(1);
         }
-        console.log("Group List:");
-        ref = bot.group_info.gnamelist;
-        for (k in ref) {
-          v = ref[k];
-          console.log("    " + v.name + " (" + v.gid + ")");
-        }
-        console.log("Buddy List:");
-        ref1 = bot.buddy_info.info;
-        for (k in ref1) {
-          v = ref1[k];
-          console.log("    " + v.nick + " (" + v.uin + ")");
-        }
+
         log.info("Entering runloop, Enjoy!");
         return bot.runloop();
       });

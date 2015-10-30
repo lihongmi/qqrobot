@@ -117,7 +117,9 @@
     };
 
     QQBot.prototype.update_group_list = function(callback) {
+      log.info('fetching group list...');
       return this.api.get_group_list(this.auth, (function(_this) {
+        log.info("update group list");
         return function(ret, e) {
           if (e) {
             log.error(e);
@@ -133,7 +135,9 @@
     };
 
     QQBot.prototype.update_buddy_list = function(callback) {
+      log.info('fetching buddy list...');
       return this.api.get_buddy_list(this.auth, (function(_this) {
+        log.info("update buddy list");
         return function(ret, e) {
           if (ret.retcode === 0) {
             _this.buddy_info = ret.result;
@@ -161,8 +165,9 @@
     };
 
     QQBot.prototype.update_dgroup_list = function(callback) {
-      log.info("update discuss group list");
+      log.info("fetching discuss group list");
       return this.api.get_discuss_list(this.auth, (function(_this) {
+        log.info("update discuss group list");
         return function(ret, e) {
           if (e) {
             log.error(e);
@@ -249,12 +254,12 @@
           return callback(successed === all);
         }
       };
-      log.info('fetching buddy list...');
+
       this.update_buddy_list(function(ret) {
         actions.buddy = [1, ret];
         return check();
       });
-      log.info('fetching group list...');
+
       this.update_group_list((function(_this) {
         return function(ret) {
           actions.group = [1, ret];
@@ -269,7 +274,7 @@
           });
         };
       })(this));
-      log.info('fetching discuss group list');
+
       return this.update_dgroup_list();
     };
 

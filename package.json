@@ -1,6 +1,6 @@
 {
   "name": "smartqq-bot",
-  "version": "1.5.4",
+  "version": "1.5.6",
   "description": "SmartQQ robot powered by node.js",
   "main": "main.js",
   "scripts": {},
@@ -36,7 +36,7 @@
   "dependencies": {
     "js-yaml": ">= 3.0.0",
     "log": ">= 1.4.0",
-    "request": "*"
+    "request": "^2.65.0"
   },
   "engines": {
     "node": ">= 0.10.x",
@@ -47,6 +47,7 @@
   "preferGlobal": "true",
   "bin": {
     "qqbot": "main.js",
-    "smartqq-bot": "main.js"
+    "smartqq-bot": "main.js",
+    "qq": "qq.js"
   }
 }
