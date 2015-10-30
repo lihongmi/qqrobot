@@ -18,6 +18,7 @@ var config = require('./config');
 var qq_cli = {
     listBuddy: function() {
         request("http://localhost:" + config.api_port + "/listbuddy", function(err,resp,body){
+            if(! body) return console.log('qqbot not started.\n');
             var ret = JSON.parse(body);
             var info = ret.info;
             for(var k=0; k<info.length; k++) {
@@ -29,6 +30,7 @@ var qq_cli = {
     
     listGroup: function() {
         request("http://localhost:" + config.api_port + "/listgroup", function(err,resp,body){
+            if(! body) return console.log('qqbot not started.\n');
             var ret = JSON.parse(body);
             var info = ret.gnamelist;
             for(var k=0; k<info.length; k++) {
@@ -40,6 +42,7 @@ var qq_cli = {
     
     listDiscuss: function() {
         request("http://localhost:" + config.api_port + "/listdiscuss", function(err,resp,body){
+            if(! body) return console.log('qqbot not started.\n');
             console.log(err, body);
             var ret = JSON.parse(body);
             var info = ret.dnamelist;
@@ -75,6 +78,7 @@ var qq_cli = {
                 msg: args[2]
             }
         }, function(err,resp,body){
+            if(! body) return console.log('qqbot not started.\n');
             var ret = JSON.parse(body);
             console.log( ret.result.result + "\n" );
         })
@@ -82,6 +86,7 @@ var qq_cli = {
     
     quit: function( args ) {
         request("http://localhost:" + config.api_port + "/quit", function(err,resp,body){
+            if(! body) return console.log('qqbot not started.\n');
             var ret = JSON.parse(body);
             console.log( ret.msg + "\n" );
         })
