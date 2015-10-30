@@ -1,3 +1,10 @@
+> 2015.10 (by Raymond Xie)
+
+* 实现手机QQ二维码扫描认证登陆，貌似这是目前 WebQQ 唯一允许的登录方式（见 http://w.qq.com/）
+* 因为不习惯 CoffeeScript 的语法，qqauth_qrcode 用 javascript 实现
+* apiserver 中增加了发送消息给好友的实现，这部分马马虎虎直接在 coffee 里面加了几行代码
+* 登陆成功后，显示群组和好友的名称及 gid/uin，便于派发消息参考
+
 > 2014.06
 
 * [插件]uptime  -> 增加更多信息，接口调用，内存使用等
