@@ -8,8 +8,6 @@
 
   Log = require('log');
 
-  Request = require('request');
-
   Dispatcher = require('./dispatcher');
 
   log = new Log('debug');
@@ -46,7 +44,6 @@
       this.api = api;
       this.dispatcher = new Dispatcher(this.config.plugins, this);
       this.started = true;
-      this.request = Request;
     }
 
     QQBot.prototype.save_group_member = function(group, info) {
