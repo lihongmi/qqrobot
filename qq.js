@@ -45,7 +45,7 @@ var qq_cli = {
                 'Content-Length': postData.length
             }
         };
-        return http.request(options, function(resp) {
+        var req = http.request(options, function(resp) {
             var res = resp;
             var body = '';
             resp.on('data', function(chunk) {
@@ -57,6 +57,8 @@ var qq_cli = {
         }).on("error", function(e) {
             return callback(e, null, null);
         });
+        req.write(postData);
+        return req.end();
     },
 
     listBuddy: function() {

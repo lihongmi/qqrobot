@@ -220,7 +220,13 @@
       var discuss_group, group, msg, user;
       log.info("sending " + params.type + " " + params.to + " : " + params.msg);
       if (params.type === 'buddy') {
-        user = params.to;
+        if (parseInt(params.to) > 0) {
+          user = params.to;
+        } else {
+          user = this.qqbot.get_user_ex({
+            nick: params.to
+          });
+        }
         return this.qqbot.send_message(user, params.msg, function(ret, e) {
           var resp_ret;
           resp_ret = {

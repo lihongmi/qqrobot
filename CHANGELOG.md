@@ -4,6 +4,8 @@
 * 因为不习惯 CoffeeScript 的语法，qqauth_qrcode 用 javascript 实现
 * apiserver 中增加了发送消息给好友的实现，这部分马马虎虎直接在 coffee 里面加了几行代码
 * 登陆成功后，显示群组和好友的名称及 gid/uin，便于派发消息参考
+* 增加了一个命令行的 qq，用来连接 qqbot，可以显示好友、群组，并发送消息
+* qq send 支持用 好友的昵称、群组名字，因为 uin / gid 会变化
 
 > 2014.06
 

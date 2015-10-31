@@ -51,9 +51,19 @@
     };
 
     QQBot.prototype.get_user = function(uin) {
-      var users;
-      users = this.buddy_info.info.filter(function(item) {
+      var users = this.buddy_info.info.filter(function(item) {
         return item.uin === uin;
+      });
+      return users.pop();
+    };
+
+    QQBot.prototype.get_user_ex = function(options) {
+      var users = this.buddy_info.info.filter(function(item) {
+        var key, value;
+        for (key in options) {
+          value = options[key];
+          return item[key] === value;
+        }
       });
       return users.pop();
     };
@@ -68,8 +78,7 @@
     };
 
     QQBot.prototype.get_group = function(options) {
-      var groups;
-      groups = this.group_info.gnamelist.filter(function(item) {
+      var groups = this.group_info.gnamelist.filter(function(item) {
         var key, value;
         for (key in options) {
           value = options[key];

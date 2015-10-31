@@ -46,8 +46,8 @@ $ qqbot
 ```bash
 $ qq list buddy
 $ qq list group
-$ qq send buddy {uin} {msg}
-$ qq send group {gid} {msg}
+$ qq send buddy {nick} {msg}
+$ qq send group {gname} {msg}
 $ qq quit
 ```
 
