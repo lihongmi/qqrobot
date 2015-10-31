@@ -11,13 +11,56 @@ var cli_usage = "Syntax:\n" +
 var fs = require('fs'),
     os = require('os'),
 	path = require('path'),
-    request = require('request');
+    http = require('http'),
+    querystring = require('querystring');
 
 var config = require('./config');
 
 var qq_cli = {
+    api_get: function(path, callback) {
+        var url = "http://localhost:" + config.api_port + path;
+        return http.get(url, function(resp) {
+            var res = resp;
+            var body = '';
+            resp.on('data', function(chunk) {
+                return body += chunk;
+            });
+            return resp.on('end', function() {
+                return callback(null, res, body);
+            });
+        }).on("error", function(e) {
+            return callback(e, null, null);
+        });
+    },
+
+    api_post: function(path, form, callback) {
+        var postData = querystring.stringify(form);
+        var options = {
+            hostname: 'localhost',
+            port: config.api_port,
+            path: path,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+                'Content-Length': postData.length
+            }
+        };
+        return http.request(options, function(resp) {
+            var res = resp;
+            var body = '';
+            resp.on('data', function(chunk) {
+                return body += chunk;
+            });
+            return resp.on('end', function() {
+                return callback(null, res, body);
+            });
+        }).on("error", function(e) {
+            return callback(e, null, null);
+        });
+    },
+
     listBuddy: function() {
-        request("http://localhost:" + config.api_port + "/listbuddy", function(err,resp,body){
+        return this.api_get("/listbuddy", function(err,resp,body){
             if(! body) return console.log('qqbot not started.\n');
             var ret = JSON.parse(body);
             var info = ret.info;
@@ -27,9 +70,9 @@ var qq_cli = {
             console.log();
         })
     },
-    
+
     listGroup: function() {
-        request("http://localhost:" + config.api_port + "/listgroup", function(err,resp,body){
+        return this.api_get("/listgroup", function(err,resp,body){
             if(! body) return console.log('qqbot not started.\n');
             var ret = JSON.parse(body);
             var info = ret.gnamelist;
@@ -39,9 +82,9 @@ var qq_cli = {
             console.log();
         })
     },
-    
+
     listDiscuss: function() {
-        request("http://localhost:" + config.api_port + "/listdiscuss", function(err,resp,body){
+        return this.api_get("/listdiscuss", function(err,resp,body){
             if(! body) return console.log('qqbot not started.\n');
             console.log(err, body);
             var ret = JSON.parse(body);
@@ -49,7 +92,7 @@ var qq_cli = {
             console.log();
         })
     },
-    
+
     list: function( args ) {
         if(args.length != 1) return console.log(cli_usage);
         switch(args[0]) {
@@ -67,31 +110,28 @@ var qq_cli = {
                 break;
         }
     },
-    
+
     send: function( args ) {
         if(args.length != 3) return console.log(cli_usage);
-        request.post({
-            url: "http://localhost:" + config.api_port + "/send", 
-            form: {
-                type: args[0],
-                to: args[1],
-                msg: args[2]
-            }
+        return this.api_post("/send", {
+            type: args[0],
+            to: args[1],
+            msg: args[2]
         }, function(err,resp,body){
             if(! body) return console.log('qqbot not started.\n');
             var ret = JSON.parse(body);
             console.log( ret.result.result + "\n" );
-        })
+        });
     },
-    
+
     quit: function( args ) {
-        request("http://localhost:" + config.api_port + "/quit", function(err,resp,body){
+        return this.api_get("/quit", function(err,resp,body){
             if(! body) return console.log('qqbot not started.\n');
             var ret = JSON.parse(body);
             console.log( ret.msg + "\n" );
         })
     },
-    
+
     main: function( argv ) {
         var cli = argv[1];
         var args = argv.slice(2);
