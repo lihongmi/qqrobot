@@ -1,6 +1,6 @@
 {
   "name": "smartqq-bot",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "SmartQQ robot powered by node.js",
   "main": "main.js",
   "scripts": {},

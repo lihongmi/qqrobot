@@ -302,7 +302,7 @@
         prepare_login: prepare_login,
         check_qq_verify: check_qq_verify,
         get_qr_code: get_qr_code,
-        check_sig_get_cookies,
+        check_sig_get_cookies: check_sig_get_cookies,
         login_token: login_token,
         finish_verify_code: finish_verify_code,
         auth_with_qrcode: auth_with_qrcode,
