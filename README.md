@@ -4,7 +4,9 @@ SmartQQ-Bot powered by node.js
 
 FYI: QQ is a instant messaging service widely used in china provided by Tencent. SmartQQ is the web implmentation.
 
-基于 [WebQQ](http://w.qq.com/) 的机器人。原项目是 Xu Han 用 CoffeeScript 开发。Raymond Xie 主要增加了对 二维码扫描认证登陆的支持。这个版本全部代码转换为 Javascript，并且发布为 npm 包，无需配置，安装即可使用，更加方便。
+基于 [WebQQ](http://w.qq.com/) 的机器人。原项目是 Xu Han 用 CoffeeScript 开发，这是一个很棒的项目。Raymond Xie 主要增加了对 二维码扫描认证登陆的支持。这个版本全部代码转换为 javascript，并且发布为 npm 包，无需配置，安装即可使用，更加方便。
+
+![SmartQQ-Bot](qqbot.png)
 
 Features
 -----
@@ -34,14 +36,14 @@ Usage as Standalone Robot
 $ qqbot
 ```
 
-* 执行 `qqbot` 启动 SmartQQ-Bot，会从QQ服务器请求二维码图片并打开显示，
+* 执行 `qqbot` 启动 SmartQQ-Bot，会从QQ服务器请求二维码图片，并打开显示
 * 用手机QQ扫描二维码，并选择允许 smartQQ 登录
 * 登陆成功后，可以用 Ctrl+Z, bg 1 使之进入后台模式
 
-* 可以用其他的程序访问 apiserver，调用 SmartQQ-Bot 的消息转发功能，协议为：
-`http://localhost:3000/send?type=[group|buddy|discuss]&to=[gid|uin]&msg=[msg]`
+* 接下来，可以用其他的程序访问 qqbot 的 apiserver，调用 SmartQQ-Bot 的功能，协议为：
+`http://localhost:3000/send?type=[group|buddy|discuss]&to=[nick|gname]&msg=[msg]`
 
-* 附带的命令行的 qq，可以访问启动后 qqbot，可以用来显示好友、群组列表，发送消息等操作
+* 或者，用附带的命令行的 qq，访问启动后 qqbot，可以用来显示好友、群组列表，发送消息等操作
 
 ```bash
 $ qq list buddy
@@ -59,8 +61,6 @@ $ qq quit
 
 TODO
 ---
-* 实现一个命令行的 qq，通过 http 方式访问 apiserver，能够显示好友和群组列表，并发送消息
-* 群成员拉取失败问题跟踪
 * 用户信息,qq号等
 * 机器人响应前缀
 * 图片发送支持
