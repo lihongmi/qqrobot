@@ -18,5 +18,5 @@ plugins:
     - apiserver
 
 # apiserver plugin configration
-api_port:  3000
+api_port:  3200
 api_token: ''
