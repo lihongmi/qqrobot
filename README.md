@@ -6,6 +6,8 @@ FYI: QQ is a instant messaging service widely used in china provided by Tencent.
 
 基于 [WebQQ](http://w.qq.com/) 的机器人。原项目是 Xu Han 用 CoffeeScript 开发，这是一个很棒的项目。Raymond Xie 主要增加了对 二维码扫描认证登陆的支持。这个版本全部代码转换为 javascript，并且发布为 npm 包，无需配置，安装即可使用，更加方便。
 
+![SmartQQ-Bot](qqbot.png)
+
 Features
 -----
 * 手机QQ二维码扫描登录，貌似这是目前 WebQQ 唯一允许的登录方式
