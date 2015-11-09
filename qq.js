@@ -8,10 +8,7 @@ var cli_usage = "Syntax:\n" +
     "qq quit\n" +
     "";
 
-var fs = require('fs'),
-    os = require('os'),
-	path = require('path'),
-    http = require('http'),
+var http = require('http'),
     querystring = require('querystring');
 
 var config = require('./config');
@@ -64,11 +61,10 @@ var qq_cli = {
     listBuddy: function() {
         return this.api_get("/listbuddy", function(err,resp,body){
             if(! body) return console.log('qqbot not started.\n');
-            var ret = JSON.parse(body);
-            var info = ret.info;
-            for(var k=0; k<info.length; k++) {
-                console.log("    " + (k+1) + ', ' + info[k].nick + ' ( ' + info[k].uin + ' )');
-            }
+            var i = 0;
+            JSON.parse(body).info.forEach(function(inf){
+              console.log("  " + (++i) + ', ' + inf.nick + ' ( ' + inf.account + ' )');
+            });
             console.log();
         })
     },
@@ -76,11 +72,10 @@ var qq_cli = {
     listGroup: function() {
         return this.api_get("/listgroup", function(err,resp,body){
             if(! body) return console.log('qqbot not started.\n');
-            var ret = JSON.parse(body);
-            var info = ret.gnamelist;
-            for(var k=0; k<info.length; k++) {
-                console.log("    " + (k+1) + ', ' + info[k].name + ' ( ' + info[k].gid + ' )');
-            }
+            var i = 0;
+            JSON.parse(body).gnamelist.forEach(function(inf){
+              console.log("  " + (++i) + ', ' + inf.name + ' ( ' + inf.account + ' )');
+            });
             console.log();
         })
     },

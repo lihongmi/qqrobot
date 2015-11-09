@@ -60,8 +60,17 @@
     });
     request.on('end', function() {
       var data;
-      data = querystring.parse(queryData);
-      return callback(data);
+      if(request.headers) {
+        var contentType = request.headers['content-type'];
+        if(contentType) {
+          if(contentType.indexOf('json') > 0) {
+            return callback(JSON.parse(queryData));
+          } else if(contentType.indexOf('form-urlencoded') > 0) {
+            return callback(querystring.parse(queryData));
+          }
+        }
+      }
+      return callback(queryData);
     });
     return request.on('error', function(error) {
       return callback(null, error);
@@ -217,46 +226,55 @@
     };
 
     APIServer.prototype.on_sendmsg = function(req, res, params) {
+      var self = this;
       var discuss_group, group, msg, user;
       log.info("sending " + params.type + " " + params.to + " : " + params.msg);
       if (params.type === 'buddy') {
         if (parseInt(params.to) > 0) {
-          user = params.to;
+          return self.qqbot.get_user_uin(params.to, function(err, uin){
+            return self.qqbot.send_message(uin, params.msg, function(ret, e) {
+              var resp_ret = { result: ret };
+              if (e) {
+                resp_ret.err = 1;
+                resp_ret.msg = "" + e;
+              }
+              return res.endjson(resp_ret);
+            });
+          });
         } else {
-          user = this.qqbot.get_user_ex({
-            nick: params.to
+          user = this.qqbot.get_user_ex({ nick: params.to });
+          return this.qqbot.send_message(user, params.msg, function(ret, e) {
+            var resp_ret = { result: ret };
+            if (e) {
+              resp_ret.err = 1;
+              resp_ret.msg = "" + e;
+            }
+            return res.endjson(resp_ret);
           });
         }
-        return this.qqbot.send_message(user, params.msg, function(ret, e) {
-          var resp_ret;
-          resp_ret = {
-            result: ret
-          };
-          if (e) {
-            resp_ret.err = 1;
-            resp_ret.msg = "" + e;
-          }
-          return res.endjson(resp_ret);
-        });
       } else if (params.type === 'group') {
         if (parseInt(params.to) > 0) {
-          group = params.to;
+          return this.qqbot.get_group_gid(params.to, function(err, gid){
+            return self.qqbot.send_message_to_group(gid, params.msg, function(ret, e) {
+              var resp_ret = { result: ret };
+              if (e) {
+                resp_ret.err = 1;
+                resp_ret.msg = "" + e;
+              }
+              return res.endjson(resp_ret);
+            });
+          });
         } else {
-          group = this.qqbot.get_group({
-            name: params.to
+          group = this.qqbot.get_group({ name: params.to });
+          return this.qqbot.send_message_to_group(group, params.msg, function(ret, e) {
+            var resp_ret = { result: ret };
+            if (e) {
+              resp_ret.err = 1;
+              resp_ret.msg = "" + e;
+            }
+            return res.endjson(resp_ret);
           });
         }
-        return this.qqbot.send_message_to_group(group, params.msg, function(ret, e) {
-          var resp_ret;
-          resp_ret = {
-            result: ret
-          };
-          if (e) {
-            resp_ret.err = 1;
-            resp_ret.msg = "" + e;
-          }
-          return res.endjson(resp_ret);
-        });
       } else if (params.type === 'discuss') {
         discuss_group = this.qqbot.get_dgroup({
           name: params.to

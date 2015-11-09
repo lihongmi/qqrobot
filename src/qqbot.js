@@ -124,35 +124,62 @@
 
     QQBot.prototype.update_group_list = function(callback) {
       log.info('fetching group list...');
-      return this.api.get_group_list(this.auth, (function(_this) {
-        log.info("update group list");
-        return function(ret, e) {
-          if (e) {
-            log.error(e);
-          }
+      var self = this;
+      return this.api.get_group_list(this.auth, function(ret, e) {
+        if(e) {
+          log.error(e);
+          if(callback) return callback(false, e);
+        } else {
           if (ret.retcode === 0) {
-            _this.group_info = ret.result;
+            self.group_info = ret.result;
+            var info = self.group_info.gnamelist;
+            var n = info.length;
+            if(n > 0) {
+              info.forEach(function(inf) {
+                self.get_group_account(inf.gid, function(err, account) {
+                  if (!err) inf.account = account;
+                  if(-- n <= 0) {
+                    if(callback) return callback((!err), err);
+                  }
+                });
+              });
+            } else {
+              if(callback) return callback(true, 'ok');
+            }
+          } else {
+            if(callback) return callback(false, 'retcode isnot 0');
           }
-          if (callback) {
-            return callback(ret.retcode === 0, e || 'retcode isnot 0');
-          }
-        };
-      })(this));
+        }
+      });
     };
 
     QQBot.prototype.update_buddy_list = function(callback) {
       log.info('fetching buddy list...');
-      return this.api.get_buddy_list(this.auth, (function(_this) {
-        log.info("update buddy list");
-        return function(ret, e) {
+      var self = this;
+      return this.api.get_buddy_list(this.auth, function(ret, e) {
+        if(e) {
+          log.error(e);
+          if(callback) return callback(false, e);
+        } else {
           if (ret.retcode === 0) {
-            _this.buddy_info = ret.result;
+            self.buddy_info = ret.result;
+            var info = self.buddy_info.info;
+            var n = info.length;
+            if(n > 0) {
+              info.forEach(function(inf){
+                self.get_user_account(inf.uin, function(err, account) {
+                  if (!err) inf.account = account;
+                  if(--n <= 0) return callback((!err), err);
+                });
+              });
+            } else {
+              if(callback) return callback(true, 'ok');
+            }
+          } else {
+            if(callback) return callback(false, 'retcode isnt 0');
           }
-          if (callback) {
-            return callback(ret.retcode === 0, e || 'retcode isnot 0');
-          }
-        };
-      })(this));
+        }
+      });
     };
 
     QQBot.prototype.update_group_member = function(options, callback) {
