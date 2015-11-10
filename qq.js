@@ -2,12 +2,6 @@
 
 'use strict';
 
-var cli_usage = "Syntax:\n" + 
-    "qq list [buddy | group | discuss]\n" +
-    "qq send [buddy | group | discuss] <msg>\n" +
-    "qq quit\n" +
-    "";
-
 var http = require('http'),
     querystring = require('querystring');
 
@@ -129,25 +123,36 @@ var qq_cli = {
         })
     },
 
+    cli_usage: function(cli) {
+        var info = require('./package.json');
+        var ver_info = info.name + ', v' + info.version + '\n' +
+            'project url: ' + info.repository.url + '\n';
+        var cli_usage = "Syntax:\n" +
+            "qq list [buddy | group | discuss]\n" +
+            "qq send [buddy | group | discuss] <msg>\n" +
+            "qq quit\n";
+        console.log(ver_info);
+        console.log(cli_usage);
+    },
+
     main: function( argv ) {
         var cli = argv[1];
         var args = argv.slice(2);
         
-        if(args.length == 0) return console.log(cli_usage);
+        if(args.length == 0) return this.cli_usage(cli);
         
         switch(args[0]) {
-            case 'list':
-                this.list( args.slice(1) );
-                break;
-            case 'send':
-                this.send( args.slice(1) );
-                break;
-            case 'quit':
-                this.quit( args.slice(1) );
-                break;
-            default:
-                console.log("Unknown args: " + args[0]);
-                break;
+        case 'list':
+            this.list( args.slice(1) );
+            break;
+        case 'send':
+            this.send( args.slice(1) );
+            break;
+        case 'quit':
+            this.quit( args.slice(1) );
+            break;
+        default:
+            return this.cli_usage(cli);
         }
     }
 };
