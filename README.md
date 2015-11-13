@@ -18,7 +18,11 @@ Features
 
 你可以用TA来  
 
-* 持续集成自动通知 (对于大型软件项目来说，这是必须的。实际上这是我用 QQBot 的主要原因 --- Raymond)
+经典案例：
+* 持续集成自动通知 (这是软件项目开发必备的，也是我使用并改进 qqbot 最初的原因 --- Raymond)
+* 用来集成团队协作系统的消息推送（有QQ消息推送的看板系统，是真的即时沟通 --- Raymond）
+
+其它可能的用途：
 * 监控报警机器人（监控报警啊什么的，对于天天做电脑前，报警还得通过邮件短信提醒多不直接呢）
 * 辅助管理群成员，比如自动清理刷屏用户啊（请自己实现）
 * 聊天机器人（请自己实现AI）
@@ -41,15 +45,15 @@ $ qqbot
 * 登陆成功后，可以用 Ctrl+Z, bg 1 使之进入后台模式
 
 * 接下来，可以用其他的程序访问 qqbot 的 apiserver，调用 SmartQQ-Bot 的功能，协议为：
-`http://localhost:3000/send?type=[group|buddy|discuss]&to=[nick|gname]&msg=[msg]`
+`http://localhost:3200/send?type=[group|buddy|discuss]&to=[qqnumber/nick/gname]&msg=[msg]`
 
 * 或者，用附带的命令行的 qq，访问启动后 qqbot，可以用来显示好友、群组列表，发送消息等操作
 
 ```bash
 $ qq list buddy
 $ qq list group
-$ qq send buddy {nick} {msg}
-$ qq send group {gname} {msg}
+$ qq send buddy {qq_number/nick} {msg}
+$ qq send group {group_number/gname} {msg}
 $ qq quit
 ```
 
