@@ -85,7 +85,7 @@ var qq_cli = {
     },
 
     list: function( args ) {
-        if(args.length != 1) return console.log(cli_usage);
+        if(args.length != 1) return this.cli_usage();
         switch(args[0]) {
             case 'buddy':
                 this.listBuddy();
@@ -103,7 +103,7 @@ var qq_cli = {
     },
 
     send: function( args ) {
-        if(args.length != 3) return console.log(cli_usage);
+        if(args.length != 3) return this.cli_usage();
         return this.api_post("/send", {
             type: args[0],
             to: args[1],
@@ -123,23 +123,23 @@ var qq_cli = {
         })
     },
 
-    cli_usage: function(cli) {
+    cli_usage: function() {
         var info = require('./package.json');
         var ver_info = info.name + ', v' + info.version + '\n' +
             'project url: ' + info.repository.url + '\n';
-        var cli_usage = "Syntax:\n" +
+        var syntax = "Syntax:\n" +
             "qq list [buddy | group | discuss]\n" +
             "qq send [buddy | group | discuss] <msg>\n" +
             "qq quit\n";
         console.log(ver_info);
-        console.log(cli_usage);
+        console.log(syntax);
     },
 
     main: function( argv ) {
-        var cli = argv[1];
+        this.cli = argv[1];
         var args = argv.slice(2);
         
-        if(args.length == 0) return this.cli_usage(cli);
+        if(args.length == 0) return this.cli_usage();
         
         switch(args[0]) {
         case 'list':
@@ -152,7 +152,7 @@ var qq_cli = {
             this.quit( args.slice(1) );
             break;
         default:
-            return this.cli_usage(cli);
+            return this.cli_usage();
         }
     }
 };
