@@ -346,7 +346,7 @@
             if (ret.retcode === 0) {
               result = table[key] = ret.result;
               if (type === 4) {
-                result.account -= 3890000000;
+                //result.account -= 3890000000;
               }
               account = result.account;
               account_key = "acc" + account;
