@@ -5,7 +5,10 @@
   var os = require('os');
   var Path = require('path');
 
-  var path = Path.join(os.homedir(), '.tmp', 'store.json');
+  function getUserHome() {
+          return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+  }
+  var path = Path.join(getUserHome(), '.tmp', 'store.json');
 
   var empty = function(obj) {
     return Object.keys(obj).length === 0;
@@ -29,7 +32,7 @@
   };
 
   exports.save = function() {
-    var dir_path = Path.join(os.homedir(), ".tmp");
+    var dir_path = Path.join(getUserHome(), ".tmp");
     if(! fs.existsSync(dir_path)) fs.mkdirSync(dir_path);
 
     return fs.writeFileSync(path, JSON.stringify(defaults));

@@ -1,3 +1,6 @@
+function getUserHome() {
+        return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+}
 
 (function() {
   var fs = require('fs');
@@ -136,10 +139,10 @@
       return;
     }
 
-    var dir_path = Path.join(os.homedir(), ".tmp");
+    var dir_path = Path.join(getUserHome(), ".tmp");
     if(! fs.existsSync(dir_path)) fs.mkdirSync(dir_path);
 
-    var file_path = Path.join(os.homedir(), ".tmp", "qrcode.jpg");
+    var file_path = Path.join(getUserHome(), ".tmp", "qrcode.jpg");
     fs.writeFileSync(file_path, body, 'binary');
 
     if (process.platform !== 'darwin') {
@@ -225,7 +228,7 @@
         return get_qr_code(qq, opt.host, opt.port, function(error) {
             if (process.platform === 'darwin') {
                 log.notice("请用 手机QQ 扫描该二维码");
-                var file_path = Path.join(os.homedir(), ".tmp", "qrcode.jpg");
+                var file_path = Path.join(getUserHome(), ".tmp", "qrcode.jpg");
                 require('child_process').exec('open ' + file_path);
             } else {
                 log.notice("打开该地址->", "http://" + opt.host + ":" + opt.port);
