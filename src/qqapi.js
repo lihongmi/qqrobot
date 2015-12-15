@@ -40,7 +40,7 @@
     var clientid, params, psessionid, ptwebqq, r, ref, uin, url, vfwebqq;
     log.debug("polling...");
     ref = [auth_opts.clientid, auth_opts.psessionid, auth_opts.ptwebqq, auth_opts.uin, auth_opts.vfwebqq], clientid = ref[0], psessionid = ref[1], ptwebqq = ref[2], uin = ref[3], vfwebqq = ref[4];
-    url = "http://d.web2.qq.com/channel/poll2";
+    url = "http://d1.web2.qq.com/channel/poll2";
     r = {
       ptwebqq: "" + ptwebqq,
       clientid: "" + clientid,
@@ -118,7 +118,7 @@ function(x, K) {
 
   send_msg_2buddy = function(to_uin, msg, auth_opts, callback) {
     var opt, params, r, url;
-    url = "http://d.web2.qq.com/channel/send_buddy_msg2";
+    url = "http://d1.web2.qq.com/channel/send_buddy_msg2";
     opt = auth_opts;
     r = {
       to: to_uin,
@@ -153,11 +153,11 @@ function(x, K) {
   send_msg_2sess = function(to_gid, to_uin, msg, auth_opts, callback) {
     var opt, url;
     opt = auth_opts;
-    url = "http://d.web2.qq.com/channel/get_c2cmsg_sig2?id=" + to_gid + "&to_uin=" + to_uin + "&clientid=" + opt.clientid + "&psessionid=" + opt.psessionid + "&service_type=0&t=" + new Date().getTime();
+    url = "http://d1.web2.qq.com/channel/get_c2cmsg_sig2?id=" + to_gid + "&to_uin=" + to_uin + "&clientid=" + opt.clientid + "&psessionid=" + opt.psessionid + "&service_type=0&t=" + new Date().getTime();
     return client.get(url, function(ret, e) {
       var params, r;
       if (!e) {
-        url = "http://d.web2.qq.com/channel/send_sess_msg2";
+        url = "http://d1.web2.qq.com/channel/send_sess_msg2";
         r = {
           to: to_uin,
           face: 594,
@@ -222,7 +222,7 @@ function(x, K) {
 
   send_msg_2group = function(gid, msg, auth_opts, callback) {
     var opt, params, r, url;
-    url = 'http://d.web2.qq.com/channel/send_qun_msg2';
+    url = 'http://d1.web2.qq.com/channel/send_qun_msg2';
     opt = auth_opts;
     r = {
       group_uin: gid,
@@ -268,7 +268,7 @@ function(x, K) {
 
   get_discuss_member = function(discuss_id, auth_opts, callback) {
     var params, url;
-    url = "http://d.web2.qq.com/channel/get_discu_info";
+    url = "http://d1.web2.qq.com/channel/get_discu_info";
     params = {
       did: discuss_id,
       clientid: auth_opts.clientid,
@@ -281,7 +281,7 @@ function(x, K) {
 
   send_msg_2discuss = function(discuss_id, msg, auth_opts, callback) {
     var opt, params, r, url;
-    url = "http://d.web2.qq.com/channel/send_discu_msg2";
+    url = "http://d1.web2.qq.com/channel/send_discu_msg2";
     opt = auth_opts;
     r = {
       did: "" + discuss_id,
