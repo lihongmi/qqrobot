@@ -50,14 +50,21 @@
         }
       });
       return bot.update_all_members(function(ret) {
-        var k, ref, ref1, v;
-        if (! ret) {
-          log.error("获取信息失败");
-          process.exit(1);
+        if(ret) {
+          log.info("Entering runloop, Enjoy!");
+          return bot.runloop();
+        } else {
+          log.error("获取信息失败，再次尝试");
+          return bot.update_all_members(function(ret) {
+            if(ret) {
+              log.info("Entering runloop, Enjoy!");
+              return bot.runloop();
+            } else {
+              log.error("获取信息失败，请重新运行");
+              process.exit(1);
+            }
+          });
         }
-
-        log.info("Entering runloop, Enjoy!");
-        return bot.runloop();
       });
     });
   };

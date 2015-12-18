@@ -46,6 +46,9 @@
           ((typeof url_or_options === 'object') && (url_or_options.protocol === 'https:')) )
         http_or_https = https;
 
+      if(process.env.DEBUG) {
+        console.log(url_or_options);
+      }
       return http_or_https.get(url_or_options, function(resp){
           if(pre_callback !== undefined) pre_callback(resp);
 
@@ -57,7 +60,12 @@
               return body += chunk;
           });
           return resp.on('end', function() {
-              return callback(0, res, body);
+            if(process.env.DEBUG) {
+              console.log(resp.statusCode);
+              console.log(resp.headers);
+              console.log(body);
+            }
+            return callback(0, res, body);
           });
       }).on("error", function(e) {
           return console.log(e);
@@ -76,9 +84,10 @@
       options.headers['Content-Length'] = Buffer.byteLength(postData);
       options.headers['Cookie'] = get_cookies_string();
       options.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:27.0) Gecko/20100101 Firefox/27.0';
-      //console.log(options.headers);
-      //console.log(postData);
-
+      if(process.env.DEBUG) {
+        console.log(options.headers);
+        console.log(postData);
+      }
       var req = http_or_https.request(options, function(resp) {
           var res = resp;
           var body = '';
@@ -86,7 +95,12 @@
               return body += chunk;
           });
           return resp.on('end', function() {
-              return callback(0, res, body);
+            if(process.env.DEBUG) {
+              console.log(resp.statusCode);
+              console.log(resp.headers);
+              console.log(body);
+            }
+            return callback(0, res, body);
           });
       }).on("error", function(e) {
           return console.log(e);
@@ -117,8 +131,10 @@
     options.headers['Referer'] = 'http://d1.web2.qq.com/proxy.html?v=20151105001&callback=1&id=2';
     //options.headers['Referer'] = 'http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1';
     options.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36';
-    //console.log(options);
-    //console.log(params);
+    if(process.env.DEBUG) {
+      console.log(options);
+      console.log(params);
+    }
     req = client.request(options, function(resp) {
       if (options.debug) {
         console.log("response: " + resp.statusCode);
@@ -128,9 +144,11 @@
         return body += chunk;
       });
       return resp.on('end', function() {
-        //console.log(resp.statusCode);
-        //console.log(resp.headers);
-        //console.log(body);
+        if(process.env.DEBUG) {
+          console.log(resp.statusCode);
+          console.log(resp.headers);
+          console.log(body);
+        }
         return handle_resp_body(body, options, callback);
       });
     });
