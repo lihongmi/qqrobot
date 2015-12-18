@@ -202,7 +202,7 @@
     r = {
       status: "online",
       ptwebqq: ptwebqq,
-      clientid: "" + client_id,
+      clientid: client_id,
       psessionid: psessionid
     };
     r = JSON.stringify(r);

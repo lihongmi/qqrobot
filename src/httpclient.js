@@ -60,7 +60,7 @@
               return callback(0, res, body);
           });
       }).on("error", function(e) {
-          return log.error(e);
+          return console.log(e);
       });
   };
 
@@ -89,7 +89,7 @@
               return callback(0, res, body);
           });
       }).on("error", function(e) {
-          return log.error(e);
+          return console.log(e);
       });
       req.write(postData);
       return req.end();
@@ -114,10 +114,11 @@
       options.path += append + query;
     }
     options.headers['Cookie'] = get_cookies_string();
-    options.headers['Referer'] = 'http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1';
+    options.headers['Referer'] = 'http://d1.web2.qq.com/proxy.html?v=20151105001&callback=1&id=2';
+    //options.headers['Referer'] = 'http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1';
     options.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36';
-    console.log(options);
-    console.log(params);
+    //console.log(options);
+    //console.log(params);
     req = client.request(options, function(resp) {
       if (options.debug) {
         console.log("response: " + resp.statusCode);
@@ -127,9 +128,9 @@
         return body += chunk;
       });
       return resp.on('end', function() {
-        console.log(resp.statusCode);
-        console.log(resp.headers);
-        console.log(body);
+        //console.log(resp.statusCode);
+        //console.log(resp.headers);
+        //console.log(body);
         return handle_resp_body(body, options, callback);
       });
     });

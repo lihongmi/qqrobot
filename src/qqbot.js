@@ -484,20 +484,20 @@
     };
 
     QQBot.prototype.handle_poll_responce = function(resp, e) {
-      var code, event, i, len, ref, results;
       if (e) {
         log.error("poll with error " + e);
       }
-      code = resp ? resp.retcode : -1;
+      var code = resp ? resp.retcode : -1;
       switch (code) {
         case -1:
           return log.error("resp is null, error on parse ret", resp);
         case 0:
-          ref = resp.result;
-          results = [];
-          for (i = 0, len = ref.length; i < len; i++) {
-            event = ref[i];
-            results.push(this._handle_poll_event(event));
+          var results = [];
+          if( resp.result ) {
+            var self = this;
+            resp.result.forEach(function(event){
+              results.push(self._handle_poll_event(event));
+            });
           }
           return results;
           break;

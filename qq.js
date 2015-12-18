@@ -110,8 +110,8 @@ var qq_cli = {
             msg: args[2]
         }, function(err,resp,body){
             if(! body) return console.log('qqbot not started.\n');
-            var ret = JSON.parse(body);
-            console.log( ret.result.result + "\n" );
+            //var ret = JSON.parse(body);
+            console.log( body + '\n' );
         });
     },
 

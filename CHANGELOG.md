@@ -1,3 +1,7 @@
+> 2015.12 (by Raymond Xie)
+
+* webqq 内部做了修改，导致登录及通讯失败，经过分析，予以修复。感谢网友 ScienJus 和 thegfw 提供的帮助。
+
 > 2015.10 (by Raymond Xie)
 
 * 实现手机QQ二维码扫描认证登陆，貌似这是目前 WebQQ 唯一允许的登录方式（见 http://w.qq.com/）

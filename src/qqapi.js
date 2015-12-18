@@ -6,7 +6,7 @@
  */
 
 (function() {
-  var all_cookies, change_status, client, cookies, fs, get_buddy_list, get_discuss_list, get_discuss_member, get_friend_uin2, get_group_list, get_group_member, hash_func, jsons, log, long_poll, msg_id, send_msg_2buddy, send_msg_2discuss, send_msg_2group, send_msg_2sess;
+  var all_cookies, change_status, client, cookies, fs, get_buddy_list, get_discuss_list, get_discuss_member, get_friend_uin2, get_group_list, get_group_member, jsons, log, long_poll, msg_id, send_msg_2buddy, send_msg_2discuss, send_msg_2group, send_msg_2sess;
 
   all_cookies = [];
 
@@ -37,52 +37,45 @@
    */
 
   long_poll = function(auth_opts, callback) {
-    var clientid, params, psessionid, ptwebqq, r, ref, uin, url, vfwebqq;
     log.debug("polling...");
-    ref = [auth_opts.clientid, auth_opts.psessionid, auth_opts.ptwebqq, auth_opts.uin, auth_opts.vfwebqq], clientid = ref[0], psessionid = ref[1], ptwebqq = ref[2], uin = ref[3], vfwebqq = ref[4];
-    url = "http://d1.web2.qq.com/channel/poll2";
-    r = {
-      ptwebqq: "" + ptwebqq,
-      clientid: "" + clientid,
-      psessionid: "" + psessionid,
-      key: ""
-    };
-    params = {
-      r: jsons(r)
+    var params = {
+      r: JSON.stringify({
+        ptwebqq: auth_opts.ptwebqq,
+        clientid: auth_opts.clientid,
+        psessionid: auth_opts.psessionid,
+        key: ""
+      })
     };
     log.debug("params: " + params.r);
     return client.post({
-      url: url
+      url: "http://d1.web2.qq.com/channel/poll2"
     }, params, function(ret, e) {
-      var need_next_runloop;
-      need_next_runloop = callback(ret, e);
+      var need_next_runloop = callback(ret, e);
       if (need_next_runloop) {
         return long_poll(auth_opts, callback);
       }
     });
   };
 
-  hash_func = 
-function(x, K) {
-  x += "";
-  for (var N = [], T = 0; T < K.length; T++) N[T % 4] ^= K.charCodeAt(T);
-  var U = ["EC", "OK"],
-  V = [];
-  V[0] = x >> 24 & 255 ^ U[0].charCodeAt(0);
-  V[1] = x >> 16 & 255 ^ U[0].charCodeAt(1);
-  V[2] = x >> 8 & 255 ^ U[1].charCodeAt(0);
-  V[3] = x & 255 ^ U[1].charCodeAt(1);
-  U = [];
-  for (T = 0; T < 8; T++) U[T] = T % 2 == 0 ? N[T >> 1] : V[T >> 1];
-  N = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
-  V = "";
-  for (T = 0; T < U.length; T++) {
-    V += N[U[T] >> 4 & 15];
-    V += N[U[T] & 15]
-  }
-  return V
-}
-;
+  var hash_func = function(x, K) {
+    x += "";
+    for (var N = [], T = 0; T < K.length; T++) N[T % 4] ^= K.charCodeAt(T);
+    var U = ["EC", "OK"],
+    V = [];
+    V[0] = x >> 24 & 255 ^ U[0].charCodeAt(0);
+    V[1] = x >> 16 & 255 ^ U[0].charCodeAt(1);
+    V[2] = x >> 8 & 255 ^ U[1].charCodeAt(0);
+    V[3] = x & 255 ^ U[1].charCodeAt(1);
+    U = [];
+    for (T = 0; T < 8; T++) U[T] = T % 2 == 0 ? N[T >> 1] : V[T >> 1];
+    N = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
+    V = "";
+    for (T = 0; T < U.length; T++) {
+      V += N[U[T] >> 4 & 15];
+      V += N[U[T] & 15]
+    }
+    return V;
+  };
 
   get_buddy_list = function(auth_opts, callback) {
     var opt, r, url;
@@ -124,7 +117,7 @@ function(x, K) {
       to: to_uin,
       face: 0,
       msg_id: msg_id++,
-      clientid: "" + opt.clientid,
+      clientid: opt.clientid,
       psessionid: opt.psessionid,
       content: jsons([
         "" + msg, [
@@ -162,7 +155,7 @@ function(x, K) {
           to: to_uin,
           face: 594,
           msg_id: msg_id++,
-          clientid: "" + opt.clientid,
+          clientid: opt.clientid,
           psessionid: opt.psessionid,
           group_sig: ret.result.value,
           content: jsons([
@@ -237,7 +230,7 @@ function(x, K) {
         ]
       ]),
       face: 573,
-      clientid: "" + opt.clientid,
+      clientid: opt.clientid,
       msg_id: msg_id++,
       psessionid: opt.psessionid
     };
@@ -287,7 +280,7 @@ function(x, K) {
       did: "" + discuss_id,
       msg_id: msg_id++,
       face: 573,
-      clientid: "" + opt.clientid,
+      clientid: opt.clientid,
       psessionid: opt.psessionid,
       content: jsons([
         "" + msg, [
