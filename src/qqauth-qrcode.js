@@ -163,7 +163,7 @@ function getUserHome() {
         'Referer': 'http://d1.web2.qq.com/proxy.html?v=20151105001&callback=1&id=2',
       }
     }, function(err, resp, body) {
-      console.log(body);
+      //console.log(body);
       var ret = JSON.parse(body);
       return callback(ret);
     });
@@ -229,6 +229,7 @@ function getUserHome() {
                                     psessionid: ret.result.psessionid,
                                   };
                                   //console.log(auth_options);
+                                  log.info("登录 step5 获取 好友列表");
                                   return get_buddy(vfwebqq, ret.result.psessionid, function(ret){
                                     return callback(client.get_cookies(), auth_options);
                                   });

@@ -46,7 +46,7 @@
         key: ""
       })
     };
-    log.debug("params: " + params.r);
+    //log.debug("params: " + params.r);
     return client.post({
       url: "http://d1.web2.qq.com/channel/poll2"
     }, params, function(ret, e) {

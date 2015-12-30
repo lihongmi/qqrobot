@@ -575,7 +575,7 @@
       var msg, replied, reply, value;
       value = event.value;
       msg = {
-        content: value.content.slice(-1).pop().trim(),
+        content: value.content.slice(-1).pop(), //.trim(),
         time: new Date(value.time * 1000),
         from_uin: value.from_uin,
         type: msg_type,
