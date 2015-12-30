@@ -151,6 +151,24 @@ function getUserHome() {
     });
   };
 
+  var get_buddy = function(vfwebqq, psessionid, callback) {
+    return client.url_get({
+      method: 'GET',
+      protocol: 'http:',
+      host: 'd1.web2.qq.com',
+      path: '/channel/get_online_buddies2?vfwebqq=' + vfwebqq + '&clientid=' + client_id + '&psessionid=' + psessionid + '&t=' + Math.random(),
+      headers: {
+        'Cookie': client.get_cookies_string(),
+        'Origin': 'http://d1.web2.qq.com',
+        'Referer': 'http://d1.web2.qq.com/proxy.html?v=20151105001&callback=1&id=2',
+      }
+    }, function(err, resp, body) {
+      console.log(body);
+      var ret = JSON.parse(body);
+      return callback(ret);
+    });
+  };
+
   var cli_prompt = function(title, callback) {
     process.stdin.resume();
     process.stdout.write(title);
@@ -211,7 +229,9 @@ function getUserHome() {
                                     psessionid: ret.result.psessionid,
                                   };
                                   //console.log(auth_options);
-                                  return callback(client.get_cookies(), auth_options);
+                                  return get_buddy(vfwebqq, ret.result.psessionid, function(ret){
+                                    return callback(client.get_cookies(), auth_options);
+                                  });
                                 } else {
                                   log.info("登录失败");
                                   return log.error(ret);
