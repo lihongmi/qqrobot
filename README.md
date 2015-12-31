@@ -15,6 +15,9 @@ Features
 * 插件化，目前支持消息的派发
 * 提供HTTP API支持（比如群通知什么的都能做哦）
 * 除了 qqbot，还附带了一个命令行的 qq 来连接 qqbot，可以用来显示好友、群组列表，发送消息等操作
+* 通过对 poll 信息的分析，自动重新登录，提高了稳定性
+* 移除了扫描二维码之后的键盘输入，改为自动轮询二维码扫描结果
+* nohup qqbot &, 使 qqbot 在后台运行，stdout 结果重定向到 nohup.out
 
 你可以用TA来  
 
@@ -40,10 +43,11 @@ Usage as Standalone Robot
 $ qqbot
 ```
 
-* 执行 `qqbot` 启动 SmartQQ-Bot，会从QQ服务器请求二维码图片，并打开显示
+* 执行 `qqbot` 启动 SmartQQ-Bot，会从QQ服务器请求二维码图片。
+  ** 如果是 Mac 系统，会打开图片文件，进行扫描。
+  ** 如果是其他系统的话，则会启动一个 http服务器，请用浏览器访问 http://本机IP:3100/ 显示二维码，进行扫描。
 * 用手机QQ扫描二维码，并选择允许 smartQQ 登录
-* 登陆成功后，可以用 Ctrl+Z, bg 1 使之进入后台模式
-
+* qqbot 自动检测二维码扫描结果，进入运行状态
 * 接下来，可以用其他的程序访问 qqbot 的 apiserver，调用 SmartQQ-Bot 的功能，协议为：
 `http://localhost:3200/send?type=[group|buddy|discuss]&to=[qqnumber/nick/gname]&msg=[msg]`
 
@@ -56,6 +60,12 @@ $ qq send buddy {qq_number/nick} {msg}
 $ qq send group {group_number/gname} {msg}
 $ qq quit
 ```
+
+qqbot 也可以在后台运行，启动命令为:
+```bash
+nohup qqbot &
+```
+此时 stdout 的输出重定向到文件 nohup.out，不在屏幕显示。
 
 参考资料
 ----

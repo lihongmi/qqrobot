@@ -3,6 +3,8 @@
 * webqq 内部做了修改，导致登录及通讯失败，经过分析，予以修复。主要的通讯修改包括：vfwebqq 通过新的方法获取，以及登陆之后必须获取好友列表。感谢网友 ScienJus 和 thegfw 提供的帮助。
 * DEBUG=1 qqbot, 启用调试模式，输出通讯数据
 * 通过对 poll 信息的分析，自动重新登录，提高了稳定性
+* 移除了扫描二维码之后的键盘输入，改为自动轮询二维码扫描结果
+* nohup qqbot &, 使 qqbot 在后台运行，stdout 结果重定向到 nohup.out
 
 > 2015.10 (by Raymond Xie)
 

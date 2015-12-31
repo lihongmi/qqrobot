@@ -32,7 +32,7 @@ function getUserHome() {
         });
     };
 
-    var check_qq_verify = function(qq, callback) {
+    var check_qq_verify = function(callback) {
         var options = {
             protocol: 'https:',
             host: 'ssl.ptlogin2.qq.com',
@@ -169,24 +169,6 @@ function getUserHome() {
     });
   };
 
-  var cli_prompt = function(title, callback) {
-    process.stdin.resume();
-    process.stdout.write(title);
-    process.on("data", function(data) {
-      callback(data);
-      return process.stdin.pause();
-    });
-    process.stdin.on("data", function(data) {
-      data = data.toString().trim();
-      callback(data);
-      return process.stdin.pause();
-    });
-    return process.stdin.on('end', function() {
-      process.stdout.write('end');
-      return callback();
-    });
-  };
-
   var auto_login = function(ptwebqq, callback) {
     log.info("登录 step3 获取 vfwebqq");
     return get_vfwebqq(ptwebqq, function(ret){
@@ -221,6 +203,30 @@ function getUserHome() {
     });
   }
 
+  var wait_scan_qrcode = function(callback) {
+    log.info("登录 step1 等待二维码校验结果");
+    return check_qq_verify(function(ret) {
+        var retcode = parseInt(ret[0]);
+        if( retcode === 0 && ret[2].match(/^http/)) {
+            log.info("登录 step2 cookie 获取 ptwebqq");
+            return get_ptwebqq(ret[2], function(ret){
+                var ptwebqq = client.get_cookies().filter(function(item) {
+                    return item.match(/ptwebqq/);
+                }).pop().replace(/ptwebqq\=(.*?);.*/, '$1');
+
+                return auto_login(ptwebqq, callback);
+            });
+
+        } else if (retcode === 66 || retcode === 67) {
+          setTimeout(wait_scan_qrcode, 1000, callback);
+
+        } else {
+            log.error("登录 step1 failed", ret);
+            return;
+        }
+    });
+  };
+
   var auth_with_qrcode = function(opt, callback) {
       var qq = opt.account;
 
@@ -231,29 +237,10 @@ function getUserHome() {
               var file_path = Path.join(getUserHome(), ".tmp", "qrcode.jpg");
               require('child_process').exec('open ' + file_path);
           } else {
-              log.notice("打开该地址->", "http://" + opt.host + ":" + opt.port);
+              log.notice("请用 手机QQ 扫描该地址的二维码图片->", "http://" + opt.host + ":" + opt.port);
           }
 
-          return cli_prompt("手机QQ扫描二维码后, 回车继续: ", function(code) {
-
-              log.info("登录 step1 等待二维码校验结果");
-              return check_qq_verify(qq, function(ret) {
-                  if( parseInt(ret[0]) == 0 && ret[2].match(/^http/)) {
-
-                      log.info("登录 step2 cookie 获取 ptwebqq");
-                      return get_ptwebqq(ret[2], function(ret){
-                          var ptwebqq = client.get_cookies().filter(function(item) {
-                              return item.match(/ptwebqq/);
-                          }).pop().replace(/ptwebqq\=(.*?);.*/, '$1');
-
-                          return auto_login(ptwebqq, callback);
-                      });
-                  } else {
-                      log.error("登录 step1 failed", ret);
-                      return;
-                  }
-              });
-          });
+          return wait_scan_qrcode(callback);
       });
   }
 
@@ -269,7 +256,7 @@ function getUserHome() {
         var qq = opt.account, pass = opt.password;
         return prepare_login(function(result) {
             log.info('登录 step0 - 登录方式检测');
-            return check_qq_verify(qq, function(ret) {
+            return check_qq_verify(function(ret) {
                 //console.log(ret);
                 var need_verify = parseInt(ret[0]), verify_code = ret[1], bits = ret[2], verifySession = ret[3];
                 if (need_verify == 65 || need_verify == 66) {
@@ -291,7 +278,6 @@ function getUserHome() {
         get_buddy: get_buddy,
         finish_verify_code: finish_verify_code,
         auth_with_qrcode: auth_with_qrcode,
-        cli_prompt: cli_prompt,
         auto_login: auto_login,
         login: login,
     };
