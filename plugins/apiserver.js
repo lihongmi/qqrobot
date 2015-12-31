@@ -160,6 +160,8 @@
             return this.on_sendmsg(req, res, params);
           case '/reload':
             return this.on_reload_plugin(req, res, params);
+          case '/relogin':
+            return this.on_relogin(req, res, params);
           case '/quit':
             return this.on_quit(req, res, params);
           default:
@@ -215,6 +217,13 @@
         var bot = this.qqbot;
         return bot.update_group_list(function(ret, e){
             return res.endjson( bot.group_info );
+        });
+    };
+
+    APIServer.prototype.on_relogin = function(req, res, params) {
+        var bot = this.qqbot;
+        return bot.relogin(function(ret, e){
+            return res.endjson( bot.ret );
         });
     };
 

@@ -187,6 +187,40 @@ function getUserHome() {
     });
   };
 
+  var auto_login = function(ptwebqq, callback) {
+    log.info("登录 step3 获取 vfwebqq");
+    return get_vfwebqq(ptwebqq, function(ret){
+      if( ret.retcode === 0) {
+        var vfwebqq = ret.result.vfwebqq;
+
+        log.info("登录 step4 获取 uin, psessionid");
+        return login_token(ptwebqq, null, function(ret) {
+          if (ret.retcode === 0) {
+            log.info('登录成功');
+            var auth_options = {
+              clientid: client_id,
+              ptwebqq: ptwebqq,
+              vfwebqq: vfwebqq,
+              uin: ret.result.uin,
+              psessionid: ret.result.psessionid,
+            };
+            //console.log(auth_options);
+            log.info("登录 step5 获取 好友列表");
+            return get_buddy(vfwebqq, ret.result.psessionid, function(ret){
+              return callback(client.get_cookies(), auth_options);
+            });
+          } else {
+            log.info("登录失败");
+            return log.error(ret);
+          }
+        });
+      } else {
+        log.info("登录失败");
+        return log.error(ret);
+      }
+    });
+  }
+
   var auth_with_qrcode = function(opt, callback) {
       var qq = opt.account;
 
@@ -212,37 +246,7 @@ function getUserHome() {
                               return item.match(/ptwebqq/);
                           }).pop().replace(/ptwebqq\=(.*?);.*/, '$1');
 
-                          log.info("登录 step3 获取 vfwebqq");
-                          return get_vfwebqq(ptwebqq, function(ret){
-                            if( ret.retcode === 0) {
-                              var vfwebqq = ret.result.vfwebqq;
-
-                              log.info("登录 step4 获取 uin, psessionid");
-                              return login_token(ptwebqq, null, function(ret) {
-                                if (ret.retcode === 0) {
-                                  log.info('登录成功');
-                                  var auth_options = {
-                                    clientid: client_id,
-                                    ptwebqq: ptwebqq,
-                                    vfwebqq: vfwebqq,
-                                    uin: ret.result.uin,
-                                    psessionid: ret.result.psessionid,
-                                  };
-                                  //console.log(auth_options);
-                                  log.info("登录 step5 获取 好友列表");
-                                  return get_buddy(vfwebqq, ret.result.psessionid, function(ret){
-                                    return callback(client.get_cookies(), auth_options);
-                                  });
-                                } else {
-                                  log.info("登录失败");
-                                  return log.error(ret);
-                                }
-                              });
-                            } else {
-                              log.info("登录失败");
-                              return log.error(ret);
-                            }
-                          });
+                          return auto_login(ptwebqq, callback);
                       });
                   } else {
                       log.error("登录 step1 failed", ret);
@@ -284,9 +288,11 @@ function getUserHome() {
         get_ptwebqq: get_ptwebqq,
         get_vfwebqq: get_vfwebqq,
         login_token: login_token,
+        get_buddy: get_buddy,
         finish_verify_code: finish_verify_code,
         auth_with_qrcode: auth_with_qrcode,
         cli_prompt: cli_prompt,
+        auto_login: auto_login,
         login: login,
     };
 

@@ -115,7 +115,15 @@ var qq_cli = {
         });
     },
 
-    quit: function( args ) {
+    relogin: function() {
+        return this.api_get("/relogin", function(err,resp,body){
+            if(! body) return console.log('qqbot not started.\n');
+            var ret = JSON.parse(body);
+            console.log( ret.msg + "\n" );
+        })
+    },
+
+    quit: function() {
         return this.api_get("/quit", function(err,resp,body){
             if(! body) return console.log('qqbot not started.\n');
             var ret = JSON.parse(body);
@@ -130,6 +138,7 @@ var qq_cli = {
         var syntax = "Syntax:\n" +
             "qq list [buddy | group | discuss]\n" +
             "qq send [buddy | group | discuss] <msg>\n" +
+            "qq relogin\n" +
             "qq quit\n";
         console.log(ver_info);
         console.log(syntax);
@@ -143,14 +152,13 @@ var qq_cli = {
         
         switch(args[0]) {
         case 'list':
-            this.list( args.slice(1) );
-            break;
+            return this.list( args.slice(1) );
         case 'send':
-            this.send( args.slice(1) );
-            break;
+            return this.send( args.slice(1) );
+        case 'relogin':
+            return this.relogin();
         case 'quit':
-            this.quit( args.slice(1) );
-            break;
+            return this.quit();
         default:
             return this.cli_usage();
         }
