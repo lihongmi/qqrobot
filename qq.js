@@ -3,13 +3,17 @@
 'use strict';
 
 var http = require('http'),
+    minimist = require('minimist'),
     querystring = require('querystring');
 
 var config = require('./config');
 
+var qqbot_host = 'localhost';
+var qqbot_port = config.api_port;
+
 var qq_cli = {
     api_get: function(path, callback) {
-        var url = "http://localhost:" + config.api_port + path;
+        var url = "http://" + qqbot_host + ":" + config.api_port + path;
         return http.get(url, function(resp) {
             var res = resp;
             var body = '';
@@ -27,8 +31,8 @@ var qq_cli = {
     api_post: function(path, form, callback) {
         var postData = querystring.stringify(form);
         var options = {
-            hostname: 'localhost',
-            port: config.api_port,
+            hostname: qqbot_host,
+            port: qqbot_port,
             path: path,
             method: 'POST',
             headers: {
@@ -146,15 +150,18 @@ var qq_cli = {
 
     main: function( argv ) {
         this.cli = argv[1];
-        var args = argv.slice(2);
+        var args = minimist( argv.slice(2) );
         
-        if(args.length == 0) return this.cli_usage();
+        if(args._.length == 0) return this.cli_usage();
+
+        if(args.h) qqbot_host = args.h;
+        if(args.p) qqbot_port = parseInt(args.p);
         
-        switch(args[0]) {
+        switch(args._[0]) {
         case 'list':
-            return this.list( args.slice(1) );
+            return this.list( args._.slice(1) );
         case 'send':
-            return this.send( args.slice(1) );
+            return this.send( args._.slice(1) );
         case 'relogin':
             return this.relogin();
         case 'quit':

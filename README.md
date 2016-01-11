@@ -61,6 +61,8 @@ $ qq send group {group_number/gname} {msg}
 $ qq quit
 ```
 
+qq 命令行也可以向在其他主机上启动的 qqbot 发请求，只需指定 ip 及可选端口 -h host -p port, host 默认是 localhost, port 默认是 3200.
+
 qqbot 也可以在后台运行，启动命令为:
 ```bash
 nohup qqbot &
