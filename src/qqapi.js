@@ -277,7 +277,7 @@
     url = "http://d1.web2.qq.com/channel/send_discu_msg2";
     opt = auth_opts;
     r = {
-      did: "" + discuss_id,
+      did: discuss_id,
       msg_id: msg_id++,
       face: 573,
       clientid: opt.clientid,
