@@ -23,25 +23,48 @@ function getUserHome() {
     return crypto.createHash('md5').update(str.toString()).digest('hex');
   };
 
-    var prepare_login = function(callback) {
-        client.update_cookies('RK=OfeLBai4FB; ptcz=ad3bf14f9da2738e09e498bfeb93dd9da7540dea2b7a71acfb97ed4d3da4e277; pgv_pvi=911366144; ptisp=ctc; pgv_info=ssid=s5714472750; pgv_pvid=1051433466; qrsig=hJ9GvNx*oIvLjP5I5dQ19KPa3zwxNI62eALLO*g2JLbKPYsZIRsnbJIxNe74NzQQ;'.split(' '));
-        var url = 'https://ui.ptlogin2.qq.com/cgi-bin/login?daid=164&target=self&style=16&mibao_css=m_webqq&appid=501004106&enable_qlogin=0&no_verifyimg=1&s_url=http%3A%2F%2Fw.qq.com%2Fproxy.html&f_url=loginerroralert&strong_login=1&login_state=10&t=20131024001';
+  var prepare_login = function(callback) {
+      client.update_cookies('RK=OfeLBai4FB; ptcz=ad3bf14f9da2738e09e498bfeb93dd9da7540dea2b7a71acfb97ed4d3da4e277; pgv_pvi=911366144; ptisp=ctc; pgv_info=ssid=s5714472750; pgv_pvid=1051433466; qrsig=hJ9GvNx*oIvLjP5I5dQ19KPa3zwxNI62eALLO*g2JLbKPYsZIRsnbJIxNe74NzQQ;'.split(' '));
+      var url = 'https://ui.ptlogin2.qq.com/cgi-bin/login?daid=164&target=self&style=16&mibao_css=m_webqq&appid=501004106&enable_qlogin=0&no_verifyimg=1&s_url=http%3A%2F%2Fw.qq.com%2Fproxy.html&f_url=loginerroralert&strong_login=1&login_state=10&t=20131024001';
 
-        return client.url_get(url, function(err, resp, body){
-            return callback([]);
-        });
-    };
+      return client.url_get(url, function(err, resp, body){
+          return callback([]);
+      });
+  };
 
-    var check_qq_verify = function(callback) {
-        var options = {
-            protocol: 'https:',
-            host: 'ssl.ptlogin2.qq.com',
-            path: '/ptqrlogin?webqq_type=10&remember_uin=1&login2qq=1&aid=501004106&u1=http%3A%2F%2Fw.qq.com%2Fproxy.html%3Flogin2qq%3D1%26webqq_type%3D10&ptredirect=0&ptlang=2052&daid=164&from_ui=1&pttype=1&dumy=&fp=loginerroralert&action=0-0-' + (Math.random() * 900000 + 1000000) +'&mibao_css=m_webqq&t=undefined&g=1&js_type=0&js_ver=10141&login_sig=&pt_randsalt=0',
-            headers: {
-                'Cookie': client.get_cookies_string(),
-                'Referer':'https://ui.ptlogin2.qq.com/cgi-bin/login?daid=164&target=self&style=16&mibao_css=m_webqq&appid=501004106&enable_qlogin=0&no_verifyimg=1&s_url=http%3A%2F%2Fw.qq.com%2Fproxy.html&f_url=loginerroralert&strong_login=1&login_state=10&t=20131024001'
+  function getCookie(key) {
+        var startIndex, endIndex, cookie = client.get_cookies_string();
+        if (cookie.length > 0) {
+            startIndex = cookie.indexOf(key + '=');
+            if (startIndex !== -1) {
+                startIndex = startIndex + key.length + 1;
+                endIndex = cookie.indexOf(';', startIndex);
+                if (endIndex === -1) {
+                    endIndex = cookie.length;
+                }
+                return decodeURI(cookie.substring(startIndex, endIndex));
             }
-        };
+        }
+        return '';
+    }
+
+    // 解码cookie qrsig的值
+    function decodeQrsig(t){
+      for (var e = 0, i = 0, n = t.length; n > i; ++i)e += (e << 5) + t.charCodeAt(i); return 2147483647 & e
+    }
+
+    var check_qq_verify = function (callback) {
+        var qrsig = decodeQrsig(getCookie('qrsig')),
+
+            options = {
+                protocol: 'https:',
+                host: 'ssl.ptlogin2.qq.com',
+                path: '/ptqrlogin?ptqrtoken='+qrsig+'&webqq_type=10&remember_uin=1&login2qq=1&aid=501004106&u1=http%3A%2F%2Fw.qq.com%2Fproxy.html%3Flogin2qq%3D1%26webqq_type%3D10&ptredirect=0&ptlang=2052&daid=164&from_ui=1&pttype=1&dumy=&fp=loginerroralert&action=0-0-123332&mibao_css=m_webqq&t=undefined&g=1&js_type=0&js_ver=10141&login_sig=&pt_randsalt=0',
+                headers: {
+                    'Cookie': client.get_cookies_string(),
+                    'Referer':'https://ui.ptlogin2.qq.com/cgi-bin/login?daid=164&target=self&style=16&mibao_css=m_webqq&appid=501004106&enable_qlogin=0&no_verifyimg=1&s_url=http%3A%2F%2Fw.qq.com%2Fproxy.html&f_url=loginerroralert&strong_login=1&login_state=10&t=20131024001'
+                }
+            };
 
         return client.url_get(options, function(err, resp, body){
             var ret = body.match(/\'(.*?)\'/g).map(function(i) {
@@ -51,7 +74,7 @@ function getUserHome() {
             //console.log(ret);
             return callback(ret);
         });
-    };
+  };
 
   var get_qr_code = function(qq, host, port, callback) {
       var url = "https://ssl.ptlogin2.qq.com/ptqrshow?appid=501004106&e=0&l=M&s=5&d=72&v=4&t=" + Math.random();
