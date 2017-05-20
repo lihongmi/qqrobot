@@ -4,6 +4,7 @@
   var api = require('./qqapi');
   var Log = require('log');
   var Dispatcher = require('./dispatcher');
+  var chat = require('../ai/642455615');
   var log = new Log('debug');
 
   var MsgType = {
@@ -124,6 +125,9 @@
         } else {
           if (ret.retcode === 0) {
             self.group_info = ret.result;
+
+            if(callback) return callback(true, 'ok');
+            /*
             var info = self.group_info.gnamelist;
             var n = info.length;
             if(n > 0) {
@@ -138,6 +142,7 @@
             } else {
               if(callback) return callback(true, 'ok');
             }
+            */
           } else {
             if(callback) return callback(false, 'retcode isnot 0');
           }
@@ -155,6 +160,9 @@
         } else {
           if (ret.retcode === 0) {
             self.buddy_info = ret.result;
+
+            if(callback) return callback(true, 'ok');
+            /*
             var info = self.buddy_info.info;
             var n = info.length;
             if(n > 0) {
@@ -167,6 +175,7 @@
             } else {
               if(callback) return callback(true, 'ok');
             }
+            */
           } else {
             if(callback) return callback(false, 'retcode isnt 0');
           }
@@ -577,6 +586,7 @@
         if (msg.from_user == null) {
           msg.from_user = {};
         }
+        chat(msg.from_group.name, msg.content);
         try {
           log.debug("[群组消息]", "[" + msg.from_group.name + "] " + msg.from_user.nick + ":" + msg.content + " " + msg.time);
         } catch (undefined) {}

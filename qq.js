@@ -173,3 +173,5 @@ var qq_cli = {
 };
 
 qq_cli.main( process.argv );
+
+module.exports = qq_cli;
