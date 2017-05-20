@@ -555,6 +555,8 @@
     };
 
     QQBot.prototype._on_message = function(event, msg_type) {
+      log.debug(JSON.stringify(event));
+      log.debug(msg_type);
       var msg, replied, reply, value;
       value = event.value;
       msg = {
@@ -586,7 +588,7 @@
         if (msg.from_user == null) {
           msg.from_user = {};
         }
-        chat(msg.from_group.name, msg.content);
+        chat(msg.from_group.name, msg.content, msg.from_user, value.content);
         try {
           log.debug("[群组消息]", "[" + msg.from_group.name + "] " + msg.from_user.nick + ":" + msg.content + " " + msg.time);
         } catch (undefined) {}
