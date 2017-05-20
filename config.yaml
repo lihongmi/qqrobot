@@ -5,8 +5,8 @@ account:  2769546520
 password: "123"
 
 # server to view verification code, not required for mac
-port: 3100
-host: localhost
+port: 8010 
+host: 120.26.68.167 
 
 # message handling, ignore offline message 20 min ago
 # offline_msg_keeptime: 1200
