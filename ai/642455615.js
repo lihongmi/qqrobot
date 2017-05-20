@@ -2,17 +2,20 @@ var schedule = require('node-schedule');
 var qq = require('../qq');
 var chat = function(groupname, message) {
   if (groupname === '机器人大作战') {
-    var msg = message.replace('@微蚁小莉 ', '');
-    switch(msg) {
-      case '你是谁':
-        qq.send(['group', groupname, '我是微蚁小莉，你们的篮球宝贝']);
-        break;
-      case '你能做什么':
-        qq.send(['group', groupname, '我会在每天17:55提醒大家去打球，更多功能敬请期待']);
-        break;
-      default:
-        qq.send(['group', groupname, '很抱歉，我还不懂你说什么，更多功能敬请期待']);
-        break;
+    var isAtme = message.indexOf('@微蚁小莉 ') > -1;
+    if (isAtme) {
+      var msg = message.replace('@微蚁小莉 ', '');
+      switch(msg) {
+        case '你是谁':
+          qq.send(['group', groupname, '我是微蚁小莉，你们的篮球宝贝']);
+          break;
+        case '你能做什么':
+          qq.send(['group', groupname, '我会在每天17:55提醒大家去打球，更多功能敬请期待']);
+          break;
+        default:
+          qq.send(['group', groupname, '很抱歉，我还不懂你说什么，更多功能敬请期待']);
+          break;
+      }
     }
   }
 };
