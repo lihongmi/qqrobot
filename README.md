@@ -34,7 +34,7 @@ Features
 Installation
 -----
 ```bash
-$ [sudo] npm install -g smartqq-bot
+$ [sudo] npm install -g qqrobot
 ```
 
 Usage as Standalone Robot

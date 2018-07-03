@@ -1,12 +1,12 @@
 {
-  "name": "smartqq-bot",
-  "version": "2.2.0",
+  "name": "qqrobot",
+  "version": "1.0.0",
   "description": "SmartQQ robot powered by node.js",
   "main": "main.js",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/floatinghotpot/qqbot.git"
+    "url": "https://github.com/McLemore/qqrobot.git"
   },
   "keywords": [
     "qqbot",
@@ -18,7 +18,7 @@
     "tencent",
     "rjfun"
   ],
-  "author": "xu han <xhan87@gmail.com>",
+  "author": "mclemore <823089260@qq.com>",
   "contributors": [
     {
       "name": "xu han",
@@ -27,11 +27,14 @@
     {
       "name": "Raymond Xie",
       "email": "rjfun.mobile@gmail.com"
+    }, {
+      "name": "McLemore",
+      "email": "erdongshengfu@gmail.com"
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/floatinghotpot/floatinghotpot/issues"
+    "url": "https://github.com/McLemore/qqrobot/issues"
   },
   "dependencies": {
     "js-yaml": ">= 3.0.0",
