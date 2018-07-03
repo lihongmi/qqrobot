@@ -15,15 +15,19 @@
   var get_cookies_string = function() {
       var cookie_map = {};
       all_cookies.forEach(function(ck){
-        var v = ck.split(' ')[0];
+        var v = ck.split(';')[0];
         var kv = v.trim().split('=');
-        if(kv[1]!=';') cookie_map[kv[0]] = kv[1];
+        if(kv[1]!=';') {
+          if (!(cookie_map[kv[0]] && cookie_map[kv[0]].trim() && !kv[1].trim())) {
+            cookie_map[kv[0]] = kv[1];
+          }
+        }
       });
       var cks = [];
       for(var k in cookie_map) {
         cks.push(k + '=' + cookie_map[k]);
       }
-      return cks.join(' ');
+      return cks.join('; ');
   };
 
   var update_cookies = function(cks) {
